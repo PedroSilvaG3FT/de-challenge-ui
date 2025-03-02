@@ -1,21 +1,26 @@
 import { z } from "zod";
+import { format } from "date-fns";
 import { cn } from "@/design/lib/utils";
 import { useForm } from "react-hook-form";
-import { ArrowLeftRight } from "lucide-react";
 import { ETripType } from "../../enums/trip.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/design/components/ui/button";
+import { IconPlaneDeparture } from "@tabler/icons-react";
 import { FormContainer } from "@/design/components/ui/form";
 import { ETravelClass } from "../../enums/travel-class.enum";
+import { Separator } from "@/design/components/ui/separator";
 import { TripFormOptions } from "../../constants/trip.constant";
-import AirportSearchComponent from "./_airport-search.component";
+import { IFlightSearchRequest } from "../../interface/flight.interface";
 import AppFormSelect from "@/modules/@shared/components/form/form-select";
 import PassengerSelectionComponent from "./_passenger-selection.component";
 import { TravelClassFormOptions } from "../../constants/travel-class.constant";
+import DestinationSelectionComponent from "./_destination-selection.component";
 import AppFormDatepicker from "@/modules/@shared/components/form/form-datepicker";
+import { CenterAbsoluteItemClassName } from "@/modules/@shared/constants/common-class-name.contant";
 
 interface IProps {
   className?: string;
+  onSubmit: (data: IFlightSearchRequest) => void;
 }
 
 const formSchema = z.object({
@@ -23,10 +28,12 @@ const formSchema = z.object({
   tripType: z.nativeEnum(ETripType),
   origin: z.string().min(1, "Origin is required"),
   destination: z.string().min(1, "Destination is required"),
-  dateRange: z.object({
-    from: z.date({ required_error: "Departure date is required" }),
-    to: z.date().optional(),
-  }),
+  dateRange: z
+    .object({
+      from: z.date({ required_error: "Departure date is required" }),
+      to: z.date().optional(),
+    })
+    .or(z.date()),
   passengers: z.object({
     adult: z.number().int().min(1, "At least 1 adult is required"),
     children: z.number().int().min(0).default(0),
@@ -37,7 +44,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function FlightSearchComponent(props: IProps) {
-  const { className } = props;
+  const { className, onSubmit } = props;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -53,17 +60,36 @@ export default function FlightSearchComponent(props: IProps) {
 
   const watchTripType = form.watch("tripType");
 
-  function onSubmit(values: FormValues) {
-    console.log("Form values:", values);
+  function handleSubmitSearch(values: FormValues) {
+    const departureDate =
+      values.dateRange instanceof Date
+        ? format(values.dateRange, "yyyy-MM-dd")
+        : format(values.dateRange.from, "yyyy-MM-dd");
+
+    const returnDate =
+      values.dateRange instanceof Date || !values.dateRange.to
+        ? undefined
+        : format(values.dateRange.to, "yyyy-MM-dd");
+
+    onSubmit({
+      returnDate,
+      departureDate,
+      adults: values.passengers.adult,
+      travelClass: values.travelClass,
+      infants: values.passengers.infant,
+      originLocationCode: values.origin,
+      children: values.passengers.children,
+      destinationLocationCode: values.destination,
+    });
   }
 
   return (
     <FormContainer {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmitSearch)}
         className={cn(
           className,
-          "bg-secondary shadow-md rounded-xl p-4 w-full"
+          "bg-secondary shadow-md rounded-xl p-4 w-full relative"
         )}
       >
         <nav className="mb-3 flex gap-4 items-center w-2/4">
@@ -85,30 +111,9 @@ export default function FlightSearchComponent(props: IProps) {
         </nav>
 
         <section className="mb-6 grid gap-4 grid-cols-2">
-          <article className="relative grid grid-cols-2 rounded-lg bg-white p-2">
-            <AirportSearchComponent
-              name="origin"
-              placeholder="Origin"
-              control={form.control}
-            />
+          <DestinationSelectionComponent form={form} />
 
-            <Button
-              size="icon"
-              variant="ghost"
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-              <ArrowLeftRight className="text-primary" />
-            </Button>
-
-            <AirportSearchComponent
-              name="destination"
-              control={form.control}
-              placeholder="Destination"
-              containerClassName="pl-4"
-            />
-          </article>
-
-          <article className="relative grid grid-cols-2 rounded-lg bg-white p-2">
+          <article className="relative grid gap-2 grid-cols-2 rounded-lg bg-white p-2">
             <AppFormDatepicker
               name="dateRange"
               control={form.control}
@@ -121,15 +126,27 @@ export default function FlightSearchComponent(props: IProps) {
               }
             />
 
+            <Separator
+              orientation="vertical"
+              className={CenterAbsoluteItemClassName}
+            />
+
             <PassengerSelectionComponent
               name="passengers"
               control={form.control}
-              className="border-red-500 h-full border-none"
+              className="h-full border-none"
             />
           </article>
         </section>
 
-        <Button type="submit">Search Flights</Button>
+        <Button
+          type="submit"
+          disabled={!form.formState.isValid}
+          className="absolute left-1/2 transform -translate-x-1/2"
+        >
+          Search Flights
+          <IconPlaneDeparture className="ml-4" />
+        </Button>
       </form>
     </FormContainer>
   );
