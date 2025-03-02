@@ -1,19 +1,24 @@
-import { DateRange } from "react-day-picker";
 import { Control, useController } from "react-hook-form";
-import DatePicker from "@/design/components/ui/datepicker";
+import { DateRange } from "react-day-picker";
 import DatePickerRange from "@/design/components/ui/datepicker-range";
+import DatePicker from "@/design/components/ui/datepicker";
+
 interface IAppFormDatepickerProps {
   name: string;
-  control: Control<any>;
-  isRange?: boolean;
   label?: string;
+  isRange?: boolean;
+  className?: string;
+  placeholder?: string;
+  control: Control<any>;
 }
 
 export default function AppFormDatepicker({
   name,
-  control,
-  isRange = false,
   label,
+  control,
+  className,
+  placeholder,
+  isRange = false,
 }: IAppFormDatepickerProps) {
   const {
     field: { value, onChange },
@@ -23,22 +28,37 @@ export default function AppFormDatepicker({
     control,
   });
 
+  const ensureValidDate = (date: any): Date | undefined => {
+    if (date instanceof Date && !isNaN(date.getTime())) return date;
+    return undefined;
+  };
+
+  const ensureValidDateRange = (range: any): DateRange => {
+    return {
+      from: ensureValidDate(range?.from) || undefined,
+      to: ensureValidDate(range?.to),
+    };
+  };
+
   return (
     <div>
       {label && (
         <label className="block mb-2 text-sm font-medium text-gray-900">
-          {/* {props.required && <span className="text-red-400 mr-0.5">*</span>} */}
           {label}
         </label>
       )}
       {isRange ? (
         <DatePickerRange
-          value={value as DateRange}
+          className={className}
+          placeholder={placeholder}
+          value={ensureValidDateRange(value)}
           onChange={(newValue) => onChange(newValue)}
         />
       ) : (
         <DatePicker
-          value={value as Date}
+          className={className}
+          placeholder={placeholder}
+          value={ensureValidDate(value)}
           onChange={(newValue) => onChange(newValue)}
         />
       )}

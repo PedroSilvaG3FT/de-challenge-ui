@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 interface IProps {
   value?: DateRange;
   className?: string;
+  placeholder?: string;
   onChange?: (date: DateRange | undefined) => void;
 }
 
@@ -16,17 +17,19 @@ export default function DatePickerRange({
   value,
   onChange,
   className,
+  placeholder = "Pick a date range",
 }: IProps) {
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("grid gap-2 h-full")}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
-              !value && "text-muted-foreground"
+              "justify-start text-left font-normal",
+              !value && "text-muted-foreground",
+              className
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -40,7 +43,7 @@ export default function DatePickerRange({
                 format(value.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date range</span>
+              <span>{placeholder}</span>
             )}
           </Button>
         </PopoverTrigger>

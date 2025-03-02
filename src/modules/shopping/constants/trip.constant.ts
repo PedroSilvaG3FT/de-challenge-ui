@@ -3,5 +3,5 @@ import { IFormOption } from "@/modules/@shared/components/_interfaces/form-optio
 
 export const TripFormOptions: IFormOption[] = [
   { label: "One-way", value: ETripType.OneWay },
-  { label: "Round-trip", value: ETripType.OneWay },
+  { label: "Round-trip", value: ETripType.RoundTrip },
 ];

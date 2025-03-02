@@ -19,32 +19,35 @@ interface IProps {
 }
 
 const formSchema = z.object({
-  travelClass: z.string().min(1, "Campo obrigatório"),
-  tripType: z.enum([ETripType.OneWay, ETripType.RoundTrip]),
+  travelClass: z.nativeEnum(ETravelClass),
+  tripType: z.nativeEnum(ETripType),
   origin: z.string().min(1, "Campo obrigatório"),
   destination: z.string().min(1, "Campo obrigatório"),
-  departureDate: z.date(),
-  returnDate: z.date().optional(),
+  dateRange: z.object({
+    from: z.date(),
+    to: z.date().optional(),
+  }),
 });
+
+type FormValues = z.infer<typeof formSchema>;
 
 export default function FlightSearchComponent(props: IProps) {
   const { className } = props;
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       origin: "",
       destination: "",
-      returnDate: undefined,
-      departureDate: new Date(),
       tripType: ETripType.OneWay,
       travelClass: ETravelClass.Economy,
+      dateRange: { from: new Date(), to: undefined },
     },
   });
 
   const watchTripType = form.watch("tripType");
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: FormValues) {
     console.log("Form values:", values);
   }
 
@@ -97,24 +100,20 @@ export default function FlightSearchComponent(props: IProps) {
             />
           </article>
 
-          <article className="relative grid grid-cols-2 rounded-lg bg-white p-2">
+          <article className="relative grid grid-cols-1 rounded-lg bg-white p-2">
             <AppFormDatepicker
-              name="departureDate"
+              name="dateRange"
               control={form.control}
-              label="Departure Date"
+              className="border-transparent h-full w-full"
+              isRange={watchTripType === ETripType.RoundTrip}
+              placeholder={
+                watchTripType === ETripType.OneWay
+                  ? "Departure Date"
+                  : "Travel Dates"
+              }
             />
-            {watchTripType}
-            {watchTripType === ETripType.RoundTrip && (
-              <AppFormDatepicker
-                name="returnDate"
-                label="Return Date"
-                control={form.control}
-              />
-            )}
           </article>
         </section>
-
-        <section className="grid gap-4 grid-cols-2 w-2/4 mb-6"></section>
 
         <Button type="submit">Search Flights</Button>
       </form>
