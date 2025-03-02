@@ -10,9 +10,9 @@ import { ETravelClass } from "../../enums/travel-class.enum";
 import { TripFormOptions } from "../../constants/trip.constant";
 import AirportSearchComponent from "./_airport-search.component";
 import AppFormSelect from "@/modules/@shared/components/form/form-select";
+import PassengerSelectionComponent from "./_passenger-selection.component";
 import { TravelClassFormOptions } from "../../constants/travel-class.constant";
 import AppFormDatepicker from "@/modules/@shared/components/form/form-datepicker";
-import AppFormRadioGroup from "@/modules/@shared/components/form/form-radio-group";
 
 interface IProps {
   className?: string;
@@ -21,11 +21,16 @@ interface IProps {
 const formSchema = z.object({
   travelClass: z.nativeEnum(ETravelClass),
   tripType: z.nativeEnum(ETripType),
-  origin: z.string().min(1, "Campo obrigatório"),
-  destination: z.string().min(1, "Campo obrigatório"),
+  origin: z.string().min(1, "Origin is required"),
+  destination: z.string().min(1, "Destination is required"),
   dateRange: z.object({
-    from: z.date(),
+    from: z.date({ required_error: "Departure date is required" }),
     to: z.date().optional(),
+  }),
+  passengers: z.object({
+    adult: z.number().int().min(1, "At least 1 adult is required"),
+    children: z.number().int().min(0).default(0),
+    infant: z.number().int().min(0).default(0),
   }),
 });
 
@@ -42,6 +47,7 @@ export default function FlightSearchComponent(props: IProps) {
       tripType: ETripType.OneWay,
       travelClass: ETravelClass.Economy,
       dateRange: { from: new Date(), to: undefined },
+      passengers: { adult: 1, children: 0, infant: 0 },
     },
   });
 
@@ -60,23 +66,25 @@ export default function FlightSearchComponent(props: IProps) {
           "bg-secondary shadow-md rounded-xl p-4 w-full"
         )}
       >
-        <nav className="grid gap-4 grid-cols-2 items-center w-2/4">
+        <nav className="mb-3 flex gap-4 items-center w-2/4">
           <AppFormSelect
             name="travelClass"
             placeholder="Class"
             control={form.control}
             options={TravelClassFormOptions}
+            className="bg-transparent border-none text-lg"
           />
 
-          <AppFormRadioGroup
+          <AppFormSelect
             name="tripType"
+            placeholder="Trip Type"
             control={form.control}
             options={TripFormOptions}
-            containerClassName="flex-row gap-6"
+            className="bg-transparent border-none text-lg"
           />
         </nav>
 
-        <section className="my-6 grid gap-4 grid-cols-2">
+        <section className="mb-6 grid gap-4 grid-cols-2">
           <article className="relative grid grid-cols-2 rounded-lg bg-white p-2">
             <AirportSearchComponent
               name="origin"
@@ -100,7 +108,7 @@ export default function FlightSearchComponent(props: IProps) {
             />
           </article>
 
-          <article className="relative grid grid-cols-1 rounded-lg bg-white p-2">
+          <article className="relative grid grid-cols-2 rounded-lg bg-white p-2">
             <AppFormDatepicker
               name="dateRange"
               control={form.control}
@@ -111,6 +119,12 @@ export default function FlightSearchComponent(props: IProps) {
                   ? "Departure Date"
                   : "Travel Dates"
               }
+            />
+
+            <PassengerSelectionComponent
+              name="passengers"
+              control={form.control}
+              className="border-red-500 h-full border-none"
             />
           </article>
         </section>

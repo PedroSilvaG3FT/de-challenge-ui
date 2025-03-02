@@ -19,6 +19,7 @@ import { IFormOption } from "../_interfaces/form-option.interface";
 interface IAppFormSelectProps extends SelectProps {
   name: string;
   label?: string;
+  className?: string;
   placeholder?: string;
   control?: Control<any>;
   options: IFormOption[];
@@ -44,7 +45,7 @@ export default function AppFormSelect(props: IAppFormSelectProps) {
               onValueChange={field.onChange}
             >
               <FormControl>
-                <SelectTrigger>
+                <SelectTrigger className={props.className}>
                   <SelectValue placeholder={props.placeholder} />
                 </SelectTrigger>
               </FormControl>
