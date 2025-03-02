@@ -37,7 +37,7 @@ export default function AirportSearchComponent(props: IProps) {
         isLoading={isLoading}
         suggestions={airports}
         onTermChanged={handleSearch}
-        className="bg-transparent border-none"
+        className="!bg-transparent border-none"
         renderItem={(item: IAirportItem) => (
           <article className="flex items-center p-2 group">
             <IconPlaneDeparture className="w-6 h-6 mr-3 text-primary flex-shrink-0 mt-1 transition-transform duration-500 group-hover:scale-110" />

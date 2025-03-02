@@ -22,7 +22,7 @@ export default function DestinationSelectionComponent(props: IProps) {
   };
 
   return (
-    <article className="relative grid grid-cols-2 rounded-lg bg-white p-2">
+    <article className="relative grid gap-12 grid-cols-2 rounded-lg bg-background border border-foreground/10 p-2">
       <AirportSearchComponent
         name="origin"
         placeholder="Origin"
@@ -50,8 +50,8 @@ export default function DestinationSelectionComponent(props: IProps) {
         name="destination"
         control={form.control}
         placeholder="Destination"
-        containerClassName="pl-4"
       />
+      {/* containerClassName="pl-4" */}
     </article>
   );
 }

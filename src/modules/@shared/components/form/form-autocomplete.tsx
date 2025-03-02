@@ -126,7 +126,7 @@ export default function AppFormAutoComplete({
 
             <Show>
               <Show.When condition={showSuggestions || !!isLoading}>
-                <ul className="mt-1 rounded max-h-48 overflow-y-auto bg-white shadow-lg absolute z-10 w-full">
+                <ul className="mt-1 rounded max-h-48 overflow-y-auto bg-background shadow-lg absolute z-10 w-full border border-foreground/10">
                   <Show>
                     <Show.When condition={!!isLoading}>
                       <li className="px-4 py-8 flex items-center justify-center">
@@ -144,7 +144,7 @@ export default function AppFormAutoComplete({
                                 onMouseDown={() =>
                                   handleSuggestionClick(suggestion)
                                 }
-                                className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                className="px-4 py-2 cursor-pointer hover:bg-muted"
                               >
                                 {renderItem
                                   ? renderItem(suggestion)
