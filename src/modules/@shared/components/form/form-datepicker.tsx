@@ -1,104 +1,48 @@
-import { format } from "date-fns";
-import { cn } from "@/design/lib/utils";
-import { Control } from "react-hook-form";
-import { CalendarIcon } from "lucide-react";
-import { Button } from "@/design/components/ui/button";
-import { Calendar } from "@/design/components/ui/calendar";
-import {
-  FormItem,
-  FormField,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/design/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/design/components/ui/popover";
-interface IAppFormDatePickerProps {
+import { DateRange } from "react-day-picker";
+import { Control, useController } from "react-hook-form";
+import DatePicker from "@/design/components/ui/datepicker";
+import DatePickerRange from "@/design/components/ui/datepicker-range";
+interface IAppFormDatepickerProps {
   name: string;
-  label?: string;
-  placeholder?: string;
   control: Control<any>;
-  mode?: "single" | "range";
-  containerClassName?: string;
-  disabledDates?: (date: Date) => boolean;
+  isRange?: boolean;
+  label?: string;
 }
 
-export default function AppFormDatePicker(props: IAppFormDatePickerProps) {
+export default function AppFormDatepicker({
+  name,
+  control,
+  isRange = false,
+  label,
+}: IAppFormDatepickerProps) {
   const {
+    field: { value, onChange },
+    fieldState: { error },
+  } = useController({
     name,
     control,
-    label = "",
-    placeholder,
-    disabledDates,
-    containerClassName = "",
-    mode = "single",
-  } = props;
+  });
 
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className={cn("flex flex-col", containerClassName)}>
-          {label && <FormLabel>{label}</FormLabel>}
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
-                  )}
-                >
-                  {mode !== "range" ? (
-                    <>
-                      {field.value ? (
-                        format(field.value, "dd/MM/yyyy")
-                      ) : (
-                        <span>{placeholder}</span>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {field?.value?.from ? (
-                        field?.value.to ? (
-                          <>
-                            {format(field?.value.from, "dd/MM/yyyy")} -{" "}
-                            {format(field?.value.to, "dd/MM/yyyy")}
-                          </>
-                        ) : (
-                          format(field?.value.from, "dd/MM/yyyy")
-                        )
-                      ) : (
-                        <span>{placeholder}</span>
-                      )}
-                    </>
-                  )}
-
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode={mode}
-                initialFocus
-                selected={field.value}
-                onSelect={field.onChange}
-                disabled={disabledDates}
-              />
-            </PopoverContent>
-          </Popover>
-
-          <FormMessage />
-        </FormItem>
+    <div>
+      {label && (
+        <label className="block mb-2 text-sm font-medium text-gray-900">
+          {/* {props.required && <span className="text-red-400 mr-0.5">*</span>} */}
+          {label}
+        </label>
       )}
-    />
+      {isRange ? (
+        <DatePickerRange
+          value={value as DateRange}
+          onChange={(newValue) => onChange(newValue)}
+        />
+      ) : (
+        <DatePicker
+          value={value as Date}
+          onChange={(newValue) => onChange(newValue)}
+        />
+      )}
+      {error && <p className="mt-2 text-sm text-red-600">{error.message}</p>}
+    </div>
   );
 }

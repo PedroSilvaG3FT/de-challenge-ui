@@ -18,7 +18,7 @@ import { IFormOption } from "../_interfaces/form-option.interface";
 
 interface IAppFormSelectProps extends SelectProps {
   name: string;
-  label: string;
+  label?: string;
   placeholder?: string;
   control?: Control<any>;
   options: IFormOption[];

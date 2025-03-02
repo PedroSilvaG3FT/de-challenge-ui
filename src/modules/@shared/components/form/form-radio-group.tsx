@@ -9,12 +9,14 @@ import { Control } from "react-hook-form";
 import { RadioProps } from "@radix-ui/react-radio-group";
 import { IFormOption } from "../_interfaces/form-option.interface";
 import { RadioGroup, RadioGroupItem } from "@/design/components/ui/radio-group";
+import { cn } from "@/design/lib/utils";
 
 interface IAppFormRadioGroupProps extends RadioProps {
   name: string;
-  label: string;
+  label?: string;
   control: Control<any>;
   options: IFormOption[];
+  containerClassName?: string;
 }
 export default function AppFormRadioGroup(props: IAppFormRadioGroupProps) {
   return (
@@ -23,14 +25,22 @@ export default function AppFormRadioGroup(props: IAppFormRadioGroupProps) {
       control={props.control}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{props.label}</FormLabel>
+          {props.label && (
+            <FormLabel>
+              {props.required && <span className="text-red-400 mr-0.5">*</span>}
+              {props.label}
+            </FormLabel>
+          )}
           <FormControl>
             <RadioGroup
               {...field}
               value={field.value}
               defaultValue={field.value}
               onValueChange={field.onChange}
-              className="flex flex-col space-y-1"
+              className={cn(
+                "flex flex-col space-y-1",
+                props.containerClassName
+              )}
             >
               {props.options.map((item, index) => (
                 <FormItem
