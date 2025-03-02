@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { cn } from "@/design/lib/utils";
 import { Button } from "@/design/components/ui/button";
 import { Minus, Plus, User, Users } from "lucide-react";
 import { Control, useController } from "react-hook-form";
@@ -8,7 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/design/components/ui/popover";
-import { cn } from "@/design/lib/utils";
 
 interface IProps {
   name: string;

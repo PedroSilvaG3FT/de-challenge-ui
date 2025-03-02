@@ -17,6 +17,8 @@ import { TravelClassFormOptions } from "../../constants/travel-class.constant";
 import DestinationSelectionComponent from "./_destination-selection.component";
 import AppFormDatepicker from "@/modules/@shared/components/form/form-datepicker";
 import { CenterAbsoluteItemClassName } from "@/modules/@shared/constants/common-class-name.contant";
+import { useEffect } from "react";
+import { ArrowRightCircle } from "lucide-react";
 
 interface IProps {
   className?: string;
@@ -61,6 +63,7 @@ export default function FlightSearchComponent(props: IProps) {
   const watchTripType = form.watch("tripType");
 
   function handleSubmitSearch(values: FormValues) {
+    console.log("VALUES : ", values);
     const departureDate =
       values.dateRange instanceof Date
         ? format(values.dateRange, "yyyy-MM-dd")
@@ -145,7 +148,7 @@ export default function FlightSearchComponent(props: IProps) {
           className="absolute left-1/2 transform -translate-x-1/2"
         >
           Search Flights
-          <IconPlaneDeparture className="ml-4" />
+          <ArrowRightCircle className="ml-4" />
         </Button>
       </form>
     </FormContainer>

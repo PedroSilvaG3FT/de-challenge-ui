@@ -5,3 +5,10 @@ export interface IResponseUnprocessableEntity {
     type: string;
   }[];
 }
+
+export interface IBaseReponse<Data> {
+  data: Data;
+  status: number;
+  messages: string[];
+  success: boolean;
+}

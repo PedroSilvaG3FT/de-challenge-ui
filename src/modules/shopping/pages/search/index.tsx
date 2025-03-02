@@ -16,6 +16,8 @@ export default function ShoppingSearchPage() {
           onSubmit={handleSubmitSearch}
           className="relative z-10 -top-28"
         />
+
+        <section className="h-screen"></section>
       </main>
     </section>
   );

@@ -38,7 +38,10 @@ export default function DestinationSelectionComponent(props: IProps) {
         size="icon"
         type="button"
         onClick={swapOriginAndDestination}
-        className={cn(CenterAbsoluteItemClassName, "rounded-full")}
+        className={cn(
+          CenterAbsoluteItemClassName,
+          "rounded-full scale-75 transition-transform duration-500 hover:scale-90"
+        )}
       >
         <ArrowLeftRight className="w-4 h-4" />
       </Button>

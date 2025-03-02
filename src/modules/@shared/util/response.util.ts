@@ -2,7 +2,6 @@ import { AxiosError } from "axios";
 import { ToastUtil } from "./toast.util";
 import authStore from "@/store/auth.store";
 import { toast, ToastOptions } from "react-toastify";
-import { IResponseUnprocessableEntity } from "../interfaces/response.interface";
 
 export class ResponseUtil {
   public static handleError(
@@ -29,13 +28,6 @@ export class ResponseUtil {
     const data = error.response?.data as any;
     let message = data.message || defaultMessage;
 
-    if (status === 422) {
-      const data = error?.response?.data as IResponseUnprocessableEntity;
-
-      data.detail.forEach((item) => {
-        const fieldName = item.loc[item.loc.length - 1];
-        _showMessage(`${fieldName}: ${item.msg}`);
-      });
-    } else _showMessage(message);
+    _showMessage(message);
   }
 }
