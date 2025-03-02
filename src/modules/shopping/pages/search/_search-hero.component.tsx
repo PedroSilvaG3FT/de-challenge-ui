@@ -1,4 +1,5 @@
 import { FlipWords } from "@/design/components/ui/flip-words";
+import AppToggleTheme from "@/modules/@shared/components/toggle-theme";
 
 export default function SearchHeroComponent() {
   return (
