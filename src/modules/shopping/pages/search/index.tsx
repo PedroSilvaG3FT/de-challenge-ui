@@ -1,8 +1,7 @@
 import { useState } from "react";
 import SearchHeroComponent from "./_search-hero.component";
-import Each from "@/modules/@shared/components/utils/each";
 import { FlightService } from "../../services/flight.service";
-import FlightCardComponent from "../../components/flight-card";
+import FlightListComponent from "../../components/flight-list";
 import FlightFilterComponent from "../../components/flight-filter";
 import FlightSearchComponent from "../../components/flight-search";
 import {
@@ -17,7 +16,6 @@ import {
 
 export default function ShoppingSearchPage() {
   const [flights, setFlights] = useState<IFlightItem[]>([]);
-
   const [filteredFlights, setFilteredFlights] = useState<IFlightItem[]>([]);
   const [filterOptions, setFilterOptions] = useState<IFilterOptions | null>(
     null
@@ -28,11 +26,9 @@ export default function ShoppingSearchPage() {
       .then(({ data: response }) => {
         setFlights(response.data);
         setFilteredFlights(response.data);
-
-        const options = FlightSearchFilterHelper.getFilterOptions(
-          response.data
+        setFilterOptions(
+          FlightSearchFilterHelper.getFilterOptions(response.data)
         );
-        setFilterOptions(options);
       })
       .catch((error) => console.log(error));
   };
@@ -61,12 +57,7 @@ export default function ShoppingSearchPage() {
             </aside>
           )}
 
-          <section className="space-y-2 flex-1">
-            <Each
-              data={filteredFlights}
-              render={(item) => <FlightCardComponent data={item} />}
-            />
-          </section>
+          <FlightListComponent flights={filteredFlights} itemsPerPage={5} />
         </section>
       </main>
     </section>
