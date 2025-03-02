@@ -1,6 +1,6 @@
+import { format, parseISO } from "date-fns";
 import { IFlightItem } from "../../interface/flight.interface";
 import { ArrowRight, Calendar, Clock, Users } from "lucide-react";
-import { format, parseISO } from "date-fns";
 
 interface IProps {
   data: IFlightItem;
@@ -18,7 +18,7 @@ export default function FlightCardComponent(props: IProps) {
   };
 
   return (
-    <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+    <article className="h-min bg-background rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-foreground/10">
       <div className="p-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-2">
