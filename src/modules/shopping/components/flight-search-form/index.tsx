@@ -4,6 +4,7 @@ import { cn } from "@/design/lib/utils";
 import { useForm } from "react-hook-form";
 import { ArrowRightCircle } from "lucide-react";
 import { ETripType } from "../../enums/trip.enum";
+import useScreenSize from "@/hooks/screen-size.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/design/components/ui/button";
 import { FormContainer } from "@/design/components/ui/form";
@@ -13,11 +14,11 @@ import { TripFormOptions } from "../../constants/trip.constant";
 import { IFlightSearchRequest } from "../../interface/flight.interface";
 import AppFormSelect from "@/modules/@shared/components/form/form-select";
 import PassengerSelectionComponent from "./_passenger-selection.component";
+import SearchFlightFilterComponent from "./_search-form-filters.component";
 import { TravelClassFormOptions } from "../../constants/travel-class.constant";
 import DestinationSelectionComponent from "./_destination-selection.component";
 import AppFormDatepicker from "@/modules/@shared/components/form/form-datepicker";
 import { CenterAbsoluteItemClassName } from "@/modules/@shared/constants/common-class-name.contant";
-import useScreenSize from "@/hooks/screen-size.hook";
 
 interface IProps {
   className?: string;
@@ -40,6 +41,12 @@ const formSchema = z.object({
     children: z.number().int().min(0).default(0),
     infant: z.number().int().min(0).default(0),
   }),
+  filters: z.object({
+    nonStop: z.boolean().optional(),
+    maxPrice: z.number().positive().optional(),
+    max: z.number().int().positive().optional(),
+    currencyCode: z.string().length(3).optional(),
+  }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -53,16 +60,24 @@ export default function FlightSearchComponent(props: IProps) {
     defaultValues: {
       origin: "",
       destination: "",
+      dateRange: new Date(),
       tripType: ETripType.OneWay,
       travelClass: ETravelClass.Economy,
-      dateRange: { from: new Date(), to: undefined },
       passengers: { adult: 1, children: 0, infant: 0 },
+      filters: {
+        max: 20,
+        nonStop: false,
+        maxPrice: undefined,
+        currencyCode: "USD",
+      },
     },
   });
 
   const watchTripType = form.watch("tripType");
 
   function handleSubmitSearch(values: FormValues) {
+    console.log("VALUES : ", values);
+
     const departureDate =
       values.dateRange instanceof Date
         ? format(values.dateRange, "yyyy-MM-dd")
@@ -82,6 +97,7 @@ export default function FlightSearchComponent(props: IProps) {
       originLocationCode: values.origin,
       children: values.passengers.children,
       destinationLocationCode: values.destination,
+      ...values.filters,
     });
   }
 
@@ -94,7 +110,7 @@ export default function FlightSearchComponent(props: IProps) {
           "bg-background shadow-md rounded-xl p-4 w-full relative border border-foreground/10"
         )}
       >
-        <nav className="mb-3 flex gap-4 items-center mobile:justify-between">
+        <nav className="mb-3 flex gap-4 items-center w-full mobile:justify-between">
           <AppFormSelect
             name="travelClass"
             placeholder="Class"
@@ -108,6 +124,12 @@ export default function FlightSearchComponent(props: IProps) {
             placeholder="Trip Type"
             control={form.control}
             options={TripFormOptions}
+            className="!bg-transparent border-none text-lg"
+          />
+
+          <SearchFlightFilterComponent
+            name="filters"
+            control={form.control}
             className="!bg-transparent border-none text-lg"
           />
         </nav>
@@ -143,7 +165,6 @@ export default function FlightSearchComponent(props: IProps) {
 
         <Button
           type="submit"
-          disabled={!form.formState.isValid}
           className="absolute left-1/2 transform -translate-x-1/2"
         >
           Search Flights

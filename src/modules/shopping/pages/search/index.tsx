@@ -12,6 +12,8 @@ import {
   IFlightItem,
   IFlightSearchRequest,
 } from "../../interface/flight.interface";
+import { ResponseUtil } from "@/modules/@shared/util/response.util";
+import { AxiosError } from "axios";
 
 export default function ShoppingSearchPage() {
   const resultsSectionRef = useRef<HTMLElement>(null);
@@ -46,9 +48,9 @@ export default function ShoppingSearchPage() {
         setInboundFlights(inboundResponse.data);
       } else setInboundFlights([]);
     } catch (error) {
-      console.log(error);
       setOutboundFlights([]);
       setInboundFlights([]);
+      ResponseUtil.handleError(error as AxiosError);
     } finally {
       setIsLoading(false);
       scrollToResults();

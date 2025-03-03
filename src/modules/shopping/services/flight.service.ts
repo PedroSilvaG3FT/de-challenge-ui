@@ -7,9 +7,10 @@ import {
 } from "../interface/flight.interface";
 
 export class FlightService {
-  public static searchAirports(term: string) {
-    return APP_HTTP_CLIENT.get<IBaseReponse<IAirportItem[]>>(
-      `/flight/airport?keyword=${term}`
+  public static searchAirports(keyword: string) {
+    return APP_HTTP_CLIENT.post<IBaseReponse<IAirportItem[]>>(
+      `/flight/airport`,
+      { keyword }
     );
   }
 

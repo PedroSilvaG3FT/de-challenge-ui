@@ -2,12 +2,13 @@ import { AxiosError } from "axios";
 import { ToastUtil } from "./toast.util";
 import authStore from "@/store/auth.store";
 import { toast, ToastOptions } from "react-toastify";
+import { IBaseReponse } from "../interfaces/response.interface";
 
 export class ResponseUtil {
   public static handleError(
     error: AxiosError,
     toastOptions: ToastOptions<unknown> = {},
-    defaultMessage = `Ocorreu um erro ao processar a solicitação`
+    defaultMessage = `An error occurred while processing the request`
   ) {
     const status = error.response?.status || 0;
 
@@ -17,7 +18,7 @@ export class ResponseUtil {
 
         const toastId = "unauthorized";
         if (!toast.isActive(toastId)) {
-          ToastUtil.info("Sessão expirada, faça login novamente", {
+          ToastUtil.info("Session expired, please log in again", {
             ...toastOptions,
             toastId,
           });
@@ -25,9 +26,9 @@ export class ResponseUtil {
       } else ToastUtil.error(message, toastOptions);
     };
 
-    const data = error.response?.data as any;
-    let message = data.message || defaultMessage;
+    const data = error.response?.data as IBaseReponse<null>;
 
-    _showMessage(message);
+    if (!data.messages.length) _showMessage(defaultMessage);
+    else data.messages.forEach((message) => _showMessage(message));
   }
 }

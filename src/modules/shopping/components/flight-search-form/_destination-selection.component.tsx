@@ -24,7 +24,7 @@ export default function DestinationSelectionComponent(props: IProps) {
   };
 
   return (
-    <article className="relative grid gap-12 grid-cols-2 rounded-lg bg-background border border-foreground/10 p-2 mobile:grid-cols-1">
+    <article className="relative grid gap-12 grid-cols-2 rounded-lg bg-background border border-foreground/10 p-2 mobile:grid-cols-1 mobile:gap-2">
       <AirportSearchComponent
         name="origin"
         placeholder="Origin"
