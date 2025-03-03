@@ -40,7 +40,7 @@ export default function AppHeader() {
 
         <Button asChild size="sm" variant="outline">
           <a href={buttonConfig.route} className="px-6 flex gap-2 items-center">
-            {buttonConfig.label}
+            <span className="mobile:hidden">{buttonConfig.label}</span>
             {buttonConfig.icon}
           </a>
         </Button>
