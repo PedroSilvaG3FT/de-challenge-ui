@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Button } from "@/design/components/ui/button";
+import { useState } from "react";
 import { SortAsc } from "lucide-react";
+import { Label } from "@/design/components/ui/label";
+import { Button } from "@/design/components/ui/button";
+import { EFlightSortType } from "../../enums/flight-sort.enum";
+import { FlightSortOptions } from "../../constants/flight-sort.constant";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/design/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/design/components/ui/radio-group";
-import { Label } from "@/design/components/ui/label";
-import { EFlightSortType } from "../../enums/flight-sort.enum";
-import { FlightSortOptions } from "../../constants/flight-sort.constant";
 
 interface IProps {
   onSortChange: (sortType: EFlightSortType) => void;
