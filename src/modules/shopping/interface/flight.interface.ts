@@ -12,6 +12,7 @@ export interface IFlightSearchRequest {
   departureDate: string;
   currencyCode?: string;
   travelClass?: ETravelClass;
+
   originLocationCode: string;
   destinationLocationCode: string;
 }

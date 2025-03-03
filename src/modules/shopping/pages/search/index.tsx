@@ -1,66 +1,58 @@
 import { useRef, useState } from "react";
 import Show from "@/modules/@shared/components/utils/show";
 import SearchHeroComponent from "./_search-hero.component";
+import { Separator } from "@/design/components/ui/separator";
 import { FlightService } from "../../services/flight.service";
-import FlightListComponent from "../../components/flight-list";
-import FlightFilterComponent from "../../components/flight-filter";
 import FlightSearchComponent from "../../components/flight-search";
 import LoadingSearchComponent from "../../components/loading-search";
 import FlightSearchInfoComponent from "../../components/flight-search-info";
+import FlightSearchResultComponent from "../../components/flight-search-result";
 import {
   IFlightItem,
   IFlightSearchRequest,
 } from "../../interface/flight.interface";
-import {
-  IFilterOptions,
-  IAppliedFilters,
-  FlightSearchFilterHelper,
-} from "../../helpers/flight-search.helper";
+import { scrollToElement } from "@/modules/@shared/functions/scroll.function";
 
 export default function ShoppingSearchPage() {
   const resultsSectionRef = useRef<HTMLElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [flights, setFlights] = useState<IFlightItem[]>([]);
-  const [filteredFlights, setFilteredFlights] = useState<IFlightItem[]>([]);
-  const [filterOptions, setFilterOptions] = useState<IFilterOptions | null>(
-    null
-  );
+  const [outboundFlights, setOutboundFlights] = useState<IFlightItem[]>([]);
+  const [inboundFlights, setInboundFlights] = useState<IFlightItem[]>([]);
 
-  const scrollToResults = () => {
-    if (resultsSectionRef.current) {
-      resultsSectionRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const scrollToResults = () => scrollToElement(resultsSectionRef, -100);
 
-  const handleSubmitSearch = (data: IFlightSearchRequest) => {
+  const handleSubmitSearch = async (data: IFlightSearchRequest) => {
     setIsLoading(true);
     setHasSearched(true);
     scrollToResults();
 
-    FlightService.searchFlights(data)
-      .then(({ data: response }) => {
-        setFlights(response.data);
-        setFilteredFlights(response.data);
-        setFilterOptions(
-          FlightSearchFilterHelper.getFilterOptions(response.data)
-        );
-
-        setIsLoading(false);
-        scrollToResults();
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsLoading(false);
-        setFlights([]);
-        setFilteredFlights([]);
-        setFilterOptions(null);
+    try {
+      const outboundResponse = await FlightService.searchFlights({
+        ...data,
+        departureDate: data.departureDate,
       });
-  };
 
-  const handleFilterChange = (filters: IAppliedFilters) => {
-    setFilteredFlights(FlightSearchFilterHelper.applyFilters(flights, filters));
+      setOutboundFlights(outboundResponse.data.data);
+
+      if (data.returnDate) {
+        const inboundResponse = await FlightService.searchFlights({
+          ...data,
+          departureDate: data.returnDate,
+          originLocationCode: data.destinationLocationCode,
+          destinationLocationCode: data.originLocationCode,
+        });
+        setInboundFlights(inboundResponse.data.data);
+      } else setInboundFlights([]);
+    } catch (error) {
+      console.log(error);
+      setOutboundFlights([]);
+      setInboundFlights([]);
+    } finally {
+      setIsLoading(false);
+      scrollToResults();
+    }
   };
 
   return (
@@ -73,19 +65,7 @@ export default function ShoppingSearchPage() {
           className="relative z-10 -top-28"
         />
 
-        <Show>
-          <Show.When condition={!isLoading && hasSearched && !flights.length}>
-            <div className="text-center py-10">
-              <h2 className="text-2xl font-bold mb-4">No Flights Found</h2>
-              <p>
-                We couldn't find any flights matching your search criteria.
-                Please try adjusting your search parameters.
-              </p>
-            </div>
-          </Show.When>
-        </Show>
-
-        <section ref={resultsSectionRef}>
+        <section ref={resultsSectionRef} className="pb-5">
           <Show>
             <Show.When condition={isLoading}>
               <LoadingSearchComponent />
@@ -94,24 +74,51 @@ export default function ShoppingSearchPage() {
             <Show.When condition={!hasSearched}>
               <FlightSearchInfoComponent />
             </Show.When>
-            <Show.Else>
-              <article className="min-h-screen flex gap-4">
-                {filterOptions && (
-                  <aside className="p-4 h-min w-[300px] sticky top-2 bg-background shadow-md rounded-lg border border-foreground/10">
-                    <FlightFilterComponent
-                      filterOptions={filterOptions}
-                      onFilterChange={handleFilterChange}
-                    />
-                  </aside>
-                )}
 
-                <FlightListComponent
-                  itemsPerPage={5}
-                  flights={filteredFlights}
-                  onPageChange={() => scrollToResults()}
+            <Show.When
+              condition={
+                !isLoading &&
+                hasSearched &&
+                !outboundFlights.length &&
+                !inboundFlights.length
+              }
+            >
+              <div className="text-center py-10">
+                <h2 className="text-2xl font-bold mb-4">No Flights Found</h2>
+                <p>
+                  We couldn't find any flights matching your search criteria.
+                  Please try adjusting your search parameters.
+                </p>
+              </div>
+            </Show.When>
+
+            <Show.When
+              condition={
+                !isLoading &&
+                hasSearched &&
+                (outboundFlights.length > 0 || inboundFlights.length > 0)
+              }
+            >
+              <article className="min-h-screen space-y-8">
+                <FlightSearchResultComponent
+                  title="Outbound Flights"
+                  flights={outboundFlights}
+                  onPageChange={scrollToResults}
                 />
+
+                {inboundFlights.length > 0 && (
+                  <>
+                    <Separator />
+
+                    <FlightSearchResultComponent
+                      title="Inbound Flights"
+                      flights={inboundFlights}
+                      onPageChange={scrollToResults}
+                    />
+                  </>
+                )}
               </article>
-            </Show.Else>
+            </Show.When>
           </Show>
         </section>
       </main>
