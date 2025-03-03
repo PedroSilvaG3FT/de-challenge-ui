@@ -1,13 +1,13 @@
-import FlightListComponent from "./_flight-list.component";
 import { useState, useEffect, useRef } from "react";
+import FlightListComponent from "./_flight-list.component";
 import FlightFilterComponent from "./_flight-filter.component";
 import { IFlightItem } from "../../interface/flight.interface";
-import {
-  IFilterOptions,
-  IAppliedFilters,
-  FlightSearchFilterHelper,
-} from "../../helpers/flight-search.helper";
+import { FlightSearchFilterHelper } from "../../helpers/flight-search.helper";
 import { scrollToElement } from "@/modules/@shared/functions/scroll.function";
+import {
+  IFlightFilterOptions,
+  IFlightAppliedFilters,
+} from "../../interface/flight-filter.interface";
 
 interface IProps {
   title: string;
@@ -22,9 +22,8 @@ export default function FlightSearchResultComponent(props: IProps) {
   const [filteredFlights, setFilteredFlights] =
     useState<IFlightItem[]>(flights);
 
-  const [filterOptions, setFilterOptions] = useState<IFilterOptions | null>(
-    null
-  );
+  const [filterOptions, setFilterOptions] =
+    useState<IFlightFilterOptions | null>(null);
 
   useEffect(() => {
     setFilteredFlights(flights);
@@ -32,7 +31,7 @@ export default function FlightSearchResultComponent(props: IProps) {
   }, [flights]);
 
   const scrollToContainerTop = () => scrollToElement(containerRef, -100);
-  const handleFilterChange = (filters: IAppliedFilters) => {
+  const handleFilterChange = (filters: IFlightAppliedFilters) => {
     setFilteredFlights(FlightSearchFilterHelper.applyFilters(flights, filters));
   };
 

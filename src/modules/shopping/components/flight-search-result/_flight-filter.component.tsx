@@ -12,13 +12,13 @@ import {
   AccordionContent,
 } from "@/design/components/ui/accordion";
 import {
-  IFilterOptions,
-  IAppliedFilters,
-} from "../../helpers/flight-search.helper";
+  IFlightFilterOptions,
+  IFlightAppliedFilters,
+} from "../../interface/flight-filter.interface";
 
 interface FlightFilterProps {
-  filterOptions: IFilterOptions;
-  onFilterChange: (filters: IAppliedFilters) => void;
+  filterOptions: IFlightFilterOptions;
+  onFilterChange: (filters: IFlightAppliedFilters) => void;
 }
 
 export default function FlightFilterComponent({
@@ -27,7 +27,7 @@ export default function FlightFilterComponent({
 }: FlightFilterProps) {
   const [openItems, setOpenItems] = useState<string[]>(["stops", "price"]);
 
-  const { control } = useForm<IAppliedFilters>({
+  const { control } = useForm<IFlightAppliedFilters>({
     defaultValues: {
       stops: "All",
       airlines: [],
@@ -41,7 +41,8 @@ export default function FlightFilterComponent({
   const debouncedFilters = useDebounce(watchedFilters, 300);
 
   useEffect(() => {
-    if (debouncedFilters) onFilterChange(debouncedFilters as IAppliedFilters);
+    if (debouncedFilters)
+      onFilterChange(debouncedFilters as IFlightAppliedFilters);
   }, [debouncedFilters]);
 
   const formatCurrency = (value: number) =>

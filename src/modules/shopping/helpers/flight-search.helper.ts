@@ -1,23 +1,11 @@
+import {
+  IFlightFilterOptions,
+  IFlightAppliedFilters,
+} from "../interface/flight-filter.interface";
 import { IFlightItem } from "../interface/flight.interface";
 
-export interface IFilterOptions {
-  stops: string[];
-  priceRange: [number, number];
-  durationRange: [number, number];
-  airlines: { [key: string]: string };
-  departureTimeRange: [number, number];
-}
-
-export interface IAppliedFilters {
-  stops: string;
-  airlines: string[];
-  priceRange: [number, number];
-  durationRange: [number, number];
-  departureTimeRange: [number, number];
-}
-
 export class FlightSearchFilterHelper {
-  static getFilterOptions(flights: IFlightItem[]): IFilterOptions {
+  static getFilterOptions(flights: IFlightItem[]): IFlightFilterOptions {
     const airlines: { [key: string]: string } = {};
     let minPrice = Infinity;
     let maxPrice = -Infinity;
@@ -52,7 +40,7 @@ export class FlightSearchFilterHelper {
 
   static applyFilters(
     flights: IFlightItem[],
-    filters: IAppliedFilters
+    filters: IFlightAppliedFilters
   ): IFlightItem[] {
     return flights.filter((flight) => {
       // Stops filter
