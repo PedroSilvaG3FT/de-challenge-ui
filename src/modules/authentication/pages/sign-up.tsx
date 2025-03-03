@@ -1,100 +1,125 @@
 import { z } from "zod";
-import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import loadingStore from "@/store/loading.store";
+import { useAuth } from "@/contexts/auth.context";
 import { Button } from "@/design/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthContext } from "@/contexts/auth.context";
 import AuthenticationPageNav from "../components/page-nav";
 import { FormContainer } from "@/design/components/ui/form";
-import { ToastUtil } from "@/modules/@shared/util/toast.util";
 import Animate from "@/modules/@shared/components/utils/animate";
+import { ResponseUtil } from "@/modules/@shared/util/response.util";
 import AppFormInput from "@/modules/@shared/components/form/form-input";
 import AuthenticationPasswordStrength from "../components/password-strength";
 
 const passwordSchema = z
   .string()
-  .min(8, "A senha deve ter pelo menos 8 caracteres")
-  .regex(/[a-zA-Z]/, "A senha deve conter pelo menos uma letra")
-  .regex(/\d/, "A senha deve conter pelo menos um número")
+  .min(8, "Password must be at least 8 characters long")
+  .regex(/[a-zA-Z]/, "Password must contain at least one letter")
+  .regex(/\d/, "Password must contain at least one number")
   .regex(
     /[@$!%*#?&]/,
-    "A senha deve conter pelo menos um caractere especial (@$!%*#?&)"
+    "Password must contain at least one special character (@$!%*#?&)"
   );
 
 const formSchema = z
   .object({
-    name: z.string().min(1, "Campo obrigatório"),
-    password1: passwordSchema,
-    password2: z.string().min(1, "Campo obrigatório"),
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email").min(1, "Email is required"),
+    birthDate: z.string().min(1, "Birth date is required"),
+    password: passwordSchema,
+    passwordConfirm: z.string().min(1, "Confirm password is required"),
   })
-  .refine((data) => data.password1 === data.password2, {
-    message: "As senhas não coincidem",
-    path: ["password2"],
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Passwords do not match",
+    path: ["passwordConfirm"],
   });
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { signIn } = useContext(AuthContext);
+  const { signUp } = useAuth();
   const _loadingStore = loadingStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", password1: "", password2: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      birthDate: "",
+      passwordConfirm: "",
+    },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     _loadingStore.setShow(true);
     console.info("values : ", values);
-    handleSignIn("email", "password");
-    _loadingStore.setShow(false);
-  }
-
-  const handleSignIn = (email: string, password: string) => {
-    signIn(email, password)
+    signUp({
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      birthDate: values.birthDate,
+    })
       .then(() => {
-        navigate("/peticao-inicial");
+        navigate("/");
         _loadingStore.setShow(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        ResponseUtil.handleError(error);
         _loadingStore.setShow(false);
-        ToastUtil.error("Ocorreu um erro ao realizar login");
       });
-  };
+  }
 
   return (
     <Animate animation="animate__fadeIn">
-      <section className="min-w-72">
-        <AuthenticationPageNav title="Cadastro" subtitle="Insira os dados" />
+      <section className="min-w-72 overflow-y-auto h-full">
+        <AuthenticationPageNav
+          title="Sign Up"
+          subtitle="Please fill in your details below"
+        />
 
         <FormContainer {...form}>
           <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
             <AppFormInput
               name="name"
-              label="Nome"
+              label="Name"
               control={form.control}
-              placeholder="Digite seu nome"
+              placeholder="Enter your name"
             />
 
             <AppFormInput
-              label="Senha"
+              name="email"
+              label="Email"
+              control={form.control}
+              placeholder="Enter your email"
+            />
+
+            <AppFormInput
+              type="date"
+              name="birthDate"
+              label="Birth Date"
+              control={form.control}
+              placeholder="DD/MM/YYYY"
+            />
+
+            <AppFormInput
+              label="Password"
               type="password"
-              name="password1"
+              name="password"
               control={form.control}
               placeholder="**********"
             />
 
             <AppFormInput
               type="password"
-              name="password2"
+              name="passwordConfirm"
               control={form.control}
               placeholder="**********"
-              label="Confirme sua senha"
+              label="Confirm Password"
             />
 
             <AuthenticationPasswordStrength
-              password={form.watch("password1") || ""}
+              password={form.watch("password") || ""}
             />
 
             <Button
@@ -102,16 +127,16 @@ export default function SignUp() {
               className="w-full"
               disabled={!form.formState.isValid}
             >
-              Criar conta
+              Create Account
             </Button>
 
             <div className="mt-4 text-center text-sm">
-              Já possui uma conta?{" "}
+              Already have an account?{" "}
               <a
                 onClick={() => navigate("/auth/sign-in")}
                 className="underline"
               >
-                Ir para login
+                Go to login
               </a>
             </div>
           </form>

@@ -11,7 +11,7 @@ export default function AuthenticationPageNav(
         <img
           src="/logo.svg"
           alt="Deal Engine"
-          className="h-12 object-contain"
+          className="h-8 object-contain brightness-0"
         />
       </figure>
 

@@ -1,12 +1,14 @@
 import authStore from "@/store/auth.store";
 import loadingStore from "@/store/loading.store";
 import React, { createContext, useContext, useEffect } from "react";
-import { IUser } from "@/modules/@shared/interfaces/user.interface";
-import { UserService } from "@/modules/@shared/services/user.service";
+import { IUserProfile } from "@/modules/@shared/interfaces/user.interface";
+import { ISignUp } from "@/modules/authentication/interfaces/auth.interface";
+import { AuthService } from "@/modules/authentication/services/auth.service";
 
 interface IAuthContext {
-  user: IUser;
+  user: IUserProfile;
   signOut: () => void;
+  signUp: (data: ISignUp) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
 }
 
@@ -15,30 +17,46 @@ interface IAuthProviderProps {
 }
 
 const AuthContext = createContext<IAuthContext>({
-  user: {} as IUser,
+  user: {} as IUserProfile,
   signOut: () => {},
+  signUp: () => new Promise<void>(() => {}),
   signIn: () => new Promise<void>(() => {}),
 });
-
-const _userService = new UserService();
 
 const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const _authStore = authStore((state) => state);
   const _loadingStore = loadingStore((state) => state);
 
   const signOut = () => _authStore.reset();
+
   const signIn = async (email: string, password: string) => {
     try {
       _loadingStore.setShow(true);
 
-      const { data: signInResponse } = await _userService.signIn({
+      const { data: response } = await AuthService.signIn({
         email,
         password,
       });
 
-      _authStore.setToken(signInResponse.token);
+      console.log("RESPONSE : ", response);
 
-      await getUserData();
+      _authStore.setUser(response.data.user);
+      _authStore.setToken(response.data.token);
+
+      _loadingStore.setShow(false);
+    } catch (error) {
+      _loadingStore.setShow(false);
+      throw error;
+    }
+  };
+
+  const signUp = async (data: ISignUp) => {
+    try {
+      _loadingStore.setShow(true);
+
+      const { data: response } = await AuthService.signUp(data);
+      console.log(response);
+      await signIn(data.email, data.password);
 
       _loadingStore.setShow(false);
     } catch (error) {
@@ -49,8 +67,8 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
   const getUserData = async () => {
     try {
-      const userResponse = {} as IUser;
-      _authStore.setUser(userResponse);
+      const userResponse = {} as IUserProfile;
+      // _authStore.setUser(userResponse);
 
       return userResponse;
     } catch (error) {
@@ -63,6 +81,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   }, []);
 
   const providerValue: IAuthContext = {
+    signUp,
     signIn,
     signOut,
     user: _authStore.user,

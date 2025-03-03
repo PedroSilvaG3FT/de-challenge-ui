@@ -32,19 +32,19 @@ export default function AuthenticationPasswordStrength(props: IProps) {
 
   return (
     <article className="text-sm mt-2">
-      <p>A senha deve conter:</p>
+      <p>The password must contain:</p>
       <ul className="list-disc pl-5">
         <li className={checks.length ? "text-green-400" : "text-red-400"}>
-          Pelo menos 8 caracteres
+          At least 8 characters
         </li>
         <li className={checks.letter ? "text-green-400" : "text-red-400"}>
-          Pelo menos uma letra
+          At least one letter
         </li>
         <li className={checks.number ? "text-green-400" : "text-red-400"}>
-          Pelo menos um número
+          At least one number
         </li>
         <li className={checks.special ? "text-green-400" : "text-red-400"}>
-          Pelo menos um caractere especial (@$!%*#?&)
+          At least one special character (@$!%*#?&)
         </li>
       </ul>
     </article>

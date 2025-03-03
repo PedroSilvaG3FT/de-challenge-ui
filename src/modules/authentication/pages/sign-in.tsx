@@ -1,7 +1,6 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/auth.context";
 import { Button } from "@/design/components/ui/button";
-import { AuthContext } from "@/contexts/auth.context";
 import AuthenticationPageNav from "../components/page-nav";
 
 import { z } from "zod";
@@ -11,8 +10,8 @@ import { Badge } from "@/design/components/ui/badge";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormContainer } from "@/design/components/ui/form";
 import Animate from "@/modules/@shared/components/utils/animate";
-// import { ResponseUtil } from "@/modules/@shared/util/response.util";
 import AppFormInput from "@/modules/@shared/components/form/form-input";
+import { ResponseUtil } from "@/modules/@shared/util/response.util";
 
 const formSchema = z.object({
   email: z.string().min(1, "Campo obrigatório"),
@@ -21,7 +20,7 @@ const formSchema = z.object({
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const { signIn } = useContext(AuthContext);
+  const { signIn } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,10 +29,9 @@ export default function SignIn() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     signIn(values.email, values.password)
-      .then(() => navigate("/main/dashboard"))
-      .catch(() => {
-        navigate("/main/dashboard");
-        // ResponseUtil.handleError(error);
+      .then(() => navigate("/"))
+      .catch((error) => {
+        ResponseUtil.handleError(error);
       });
   }
 
@@ -71,7 +69,7 @@ export default function SignIn() {
               <ArrowRight className="ml-2 group-hover:ml-4 transition-all duration-500" />
             </Button>
 
-            <a className="underline text-center">
+            <a className="underline text-center" href="/auth/sign-up">
               Cadastre-se
               <Badge className="scale-[0.85]">Em breve</Badge>
             </a>
