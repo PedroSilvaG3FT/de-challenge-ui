@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import WorldMap from "@/components/ui/world-map";
+import WorldMap from "@/design/components/ui/world-map";
 
 export function FlightSearchInfoMapComponent() {
   return (
