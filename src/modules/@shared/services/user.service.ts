@@ -1,16 +1,9 @@
-import {
-  IAuthResponse,
-  IAuthCredentials,
-} from "@/modules/@shared/interfaces/auth.interface";
 import { APP_HTTP_CLIENT } from "@/modules/@shared/http";
+import { IUserProfile } from "../interfaces/user.interface";
+import { IBaseReponse } from "../interfaces/response.interface";
 
 export class UserService {
-  #path: string = "users";
-
-  public signIn(payload: IAuthCredentials) {
-    return APP_HTTP_CLIENT.post<IAuthResponse>(
-      `/${this.#path}/authentications/local/login`,
-      payload
-    );
+  public static getUserData() {
+    return APP_HTTP_CLIENT.get<IBaseReponse<IUserProfile>>(`/user/me`);
   }
 }

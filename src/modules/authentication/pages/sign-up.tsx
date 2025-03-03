@@ -72,7 +72,7 @@ export default function SignUp() {
 
   return (
     <Animate animation="animate__fadeIn">
-      <section className="min-w-72 overflow-y-auto h-full">
+      <section className="w-full overflow-y-auto h-full">
         <AuthenticationPageNav
           title="Sign Up"
           subtitle="Please fill in your details below"

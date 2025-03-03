@@ -1,32 +1,60 @@
+import authStore from "@/store/auth.store";
+import { useAuth } from "@/contexts/auth.context";
+import { LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/design/components/ui/button";
 import useWindowScroll from "@/hooks/window-scroll.hook";
-import authStore from "@/store/auth.store";
-import { LogIn, User } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 export default function AppHeader() {
+  const { signOut } = useAuth();
   const isScrolled = useWindowScroll(380);
-  const _authSore = authStore((state) => state);
+  const _authStore = authStore((state) => state);
+  const location = useLocation();
 
   const buttonConfig = {
-    icon: _authSore.token ? User : LogIn,
-    route: _authSore.token ? "/profile" : "/auth/sign-in",
-    label: _authSore.token ? "My Profile" : "Sign In",
+    icon: _authStore.token ? (
+      <User className="w-5 h-5" />
+    ) : (
+      <LogIn className="w-5 h-5" />
+    ),
+    route: _authStore.token ? "/profile" : "/auth/sign-in",
+    label: _authStore.token ? "My Profile" : "Sign In",
   };
+
+  const isHomeRoute = location.pathname === "/";
 
   return (
     <header className="fixed z-20 w-full h-20 backdrop-blur-sm">
-      <nav className="app-container h-full flex items-center justify-between">
+      <nav className="app-container h-full flex gap-4 items-center">
         <img
           src="/logo.svg"
           alt="Deal Engine"
-          className={`object-contain h-6 transition-all duration-300 ${
-            isScrolled ? "brightness-0" : "filter brightness-0 invert"
+          className={`object-contain mr-auto h-6 transition-all duration-300 ${
+            isHomeRoute
+              ? isScrolled
+                ? "brightness-0"
+                : "filter brightness-0 invert"
+              : "filter brightness-0"
           }`}
         />
 
-        <Button asChild>
-          <a href={buttonConfig.route}>{buttonConfig.label}</a>
+        <Button asChild size="sm" variant="outline">
+          <a href={buttonConfig.route} className="px-6 flex gap-2 items-center">
+            {buttonConfig.label}
+            {buttonConfig.icon}
+          </a>
         </Button>
+
+        {_authStore.token && (
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={signOut}
+            className="text-red-400"
+          >
+            <LogOut className="w-4 h-4" />
+          </Button>
+        )}
       </nav>
     </header>
   );

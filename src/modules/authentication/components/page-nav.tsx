@@ -6,17 +6,15 @@ export default function AuthenticationPageNav(
   props: IAuthenticationPageNavProps
 ) {
   return (
-    <nav className="grid gap-2 text-center mb-6">
-      <figure className="w-full flex items-center justify-center">
-        <img
-          src="/logo.svg"
-          alt="Deal Engine"
-          className="h-8 object-contain brightness-0"
-        />
-      </figure>
+    <nav className="mb-6">
+      <img
+        src="/logo.svg"
+        alt="Deal Engine"
+        className="h-8 mb-4 object-contain brightness-0"
+      />
 
-      <h4 className="text-center font-semibold">{props.title}</h4>
-      <p className="text-center text-sm">{props.subtitle}</p>
+      <h4 className="font-semibold">{props.title}</h4>
+      <p className="text-sm">{props.subtitle}</p>
     </nav>
   );
 }

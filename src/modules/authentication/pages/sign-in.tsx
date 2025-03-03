@@ -6,16 +6,15 @@ import AuthenticationPageNav from "../components/page-nav";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { ArrowRight } from "lucide-react";
-import { Badge } from "@/design/components/ui/badge";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormContainer } from "@/design/components/ui/form";
 import Animate from "@/modules/@shared/components/utils/animate";
-import AppFormInput from "@/modules/@shared/components/form/form-input";
 import { ResponseUtil } from "@/modules/@shared/util/response.util";
+import AppFormInput from "@/modules/@shared/components/form/form-input";
 
 const formSchema = z.object({
-  email: z.string().min(1, "Campo obrigatório"),
-  password: z.string().min(1, "Campo obrigatório"),
+  email: z.string().min(1, "Required field"),
+  password: z.string().min(1, "Required field"),
 });
 
 export default function SignIn() {
@@ -37,10 +36,10 @@ export default function SignIn() {
 
   return (
     <Animate animation="animate__fadeIn">
-      <section>
+      <section className="w-full">
         <AuthenticationPageNav
           title="Login"
-          subtitle="Bem vindo! Por favor, insira seus dados."
+          subtitle="Welcome! Please enter your credentials."
         />
 
         <FormContainer {...form}>
@@ -53,11 +52,11 @@ export default function SignIn() {
               type="email"
               label="Email"
               control={form.control}
-              placeholder="Digite seu e-mail"
+              placeholder="Enter your email"
             />
 
             <AppFormInput
-              label="Senha"
+              label="Password"
               name="password"
               type="password"
               control={form.control}
@@ -65,14 +64,21 @@ export default function SignIn() {
             />
 
             <Button type="submit" className="w-full group">
-              Entrar
+              Sign In
               <ArrowRight className="ml-2 group-hover:ml-4 transition-all duration-500" />
             </Button>
 
-            <a className="underline text-center" href="/auth/sign-up">
-              Cadastre-se
-              <Badge className="scale-[0.85]">Em breve</Badge>
-            </a>
+            <section className="flex gap-3 items-center justify-center">
+              <a className="underline text-center" href="/auth/sign-up">
+                Sign Up
+              </a>
+
+              <small>or</small>
+
+              <a className="underline text-center" href="/">
+                Back to search
+              </a>
+            </section>
           </form>
         </FormContainer>
       </section>

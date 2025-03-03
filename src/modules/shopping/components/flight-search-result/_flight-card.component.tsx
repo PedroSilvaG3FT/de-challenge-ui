@@ -24,7 +24,10 @@ export default function FlightCardComponent(props: IProps) {
           <span className="text-xl font-bold text-primary">
             {data.validatingAirlineCodes[0]}
           </span>
-          <span>| {data.itineraries[0].segments[0].carrierName}</span>
+          <span>
+            | {data.itineraries[0].segments[0].carrierName} -{" "}
+            {data.itineraries[0].segments[0].number}
+          </span>
         </div>
 
         <div>

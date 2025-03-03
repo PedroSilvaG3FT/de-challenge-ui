@@ -38,8 +38,6 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         password,
       });
 
-      console.log("RESPONSE : ", response);
-
       _authStore.setUser(response.data.user);
       _authStore.setToken(response.data.token);
 

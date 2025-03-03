@@ -5,6 +5,7 @@ import {
   IFlightItem,
   IFlightSearchRequest,
 } from "../interface/flight.interface";
+import { IFlightSearchHistory } from "../interface/flight-search-history.interface";
 
 export class FlightService {
   public static searchAirports(keyword: string) {
@@ -18,6 +19,12 @@ export class FlightService {
     return APP_HTTP_CLIENT.post<IBaseReponse<IFlightItem[]>>(
       `/flight/search`,
       payload
+    );
+  }
+
+  public static getSearchHistory() {
+    return APP_HTTP_CLIENT.get<IBaseReponse<IFlightSearchHistory[]>>(
+      `/flight/search/history`
     );
   }
 }

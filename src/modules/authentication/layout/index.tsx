@@ -6,7 +6,7 @@ export default function LoginForm({}) {
     <Card className="overflow-hidden h-[100dvh]">
       <CardContent className="h-full grid p-0 lg:grid-cols-[40%_1fr]">
         <article className="p-6 lg:p-8 flex items-center justify-center max-h-[100dvh] overflow-y-auto">
-          <main className="w-full h-full max-w-[450px] ">
+          <main className="w-full h-full max-w-[450px] bg-red flex items-center justify-center">
             <Outlet />
           </main>
         </article>
