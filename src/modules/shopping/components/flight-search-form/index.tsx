@@ -17,6 +17,7 @@ import { TravelClassFormOptions } from "../../constants/travel-class.constant";
 import DestinationSelectionComponent from "./_destination-selection.component";
 import AppFormDatepicker from "@/modules/@shared/components/form/form-datepicker";
 import { CenterAbsoluteItemClassName } from "@/modules/@shared/constants/common-class-name.contant";
+import useScreenSize from "@/hooks/screen-size.hook";
 
 interface IProps {
   className?: string;
@@ -45,6 +46,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function FlightSearchComponent(props: IProps) {
   const { className, onSubmit } = props;
+  const { isMobile } = useScreenSize();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -61,7 +63,6 @@ export default function FlightSearchComponent(props: IProps) {
   const watchTripType = form.watch("tripType");
 
   function handleSubmitSearch(values: FormValues) {
-    console.log("VALUES : ", values);
     const departureDate =
       values.dateRange instanceof Date
         ? format(values.dateRange, "yyyy-MM-dd")
@@ -128,8 +129,8 @@ export default function FlightSearchComponent(props: IProps) {
             />
 
             <Separator
-              orientation="vertical"
-              className={cn(CenterAbsoluteItemClassName, "mobile:hidden")}
+              orientation={isMobile ? "horizontal" : "vertical"}
+              className={cn(CenterAbsoluteItemClassName)}
             />
 
             <PassengerSelectionComponent

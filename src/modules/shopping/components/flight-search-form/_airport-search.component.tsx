@@ -37,7 +37,7 @@ export default function AirportSearchComponent(props: IProps) {
         isLoading={isLoading}
         suggestions={airports}
         onTermChanged={handleSearch}
-        className="!bg-transparent border-none"
+        className="!bg-transparent border-none mobile:h-5"
         popoverClassName="mobile:[width:calc(100dvw-84px)] mobile:left-0"
         renderItem={(item: IAirportItem) => (
           <article className="flex items-start p-2 group">

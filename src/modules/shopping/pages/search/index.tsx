@@ -3,47 +3,47 @@ import Show from "@/modules/@shared/components/utils/show";
 import SearchHeroComponent from "./_search-hero.component";
 import { Separator } from "@/design/components/ui/separator";
 import { FlightService } from "../../services/flight.service";
-import FlightSearchComponent from "../../components/flight-search";
-import LoadingSearchComponent from "../../components/loading-search";
+import FlightSearchFormComponent from "../../components/flight-search-form";
 import FlightSearchInfoComponent from "../../components/flight-search-info";
+import { scrollToElement } from "@/modules/@shared/functions/scroll.function";
 import FlightSearchResultComponent from "../../components/flight-search-result";
+import LoadingSearchComponent from "../../components/flight-search-result/_flight-search-loading.component";
 import {
   IFlightItem,
   IFlightSearchRequest,
 } from "../../interface/flight.interface";
-import { scrollToElement } from "@/modules/@shared/functions/scroll.function";
 
 export default function ShoppingSearchPage() {
   const resultsSectionRef = useRef<HTMLElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [outboundFlights, setOutboundFlights] = useState<IFlightItem[]>([]);
   const [inboundFlights, setInboundFlights] = useState<IFlightItem[]>([]);
+  const [outboundFlights, setOutboundFlights] = useState<IFlightItem[]>([]);
 
   const scrollToResults = () => scrollToElement(resultsSectionRef, -100);
 
   const handleSubmitSearch = async (data: IFlightSearchRequest) => {
+    scrollToResults();
     setIsLoading(true);
     setHasSearched(true);
-    scrollToResults();
 
     try {
-      const outboundResponse = await FlightService.searchFlights({
+      const { data: outboundResponse } = await FlightService.searchFlights({
         ...data,
         departureDate: data.departureDate,
       });
 
-      setOutboundFlights(outboundResponse.data.data);
+      setOutboundFlights(outboundResponse.data);
 
       if (data.returnDate) {
-        const inboundResponse = await FlightService.searchFlights({
+        const { data: inboundResponse } = await FlightService.searchFlights({
           ...data,
           departureDate: data.returnDate,
           originLocationCode: data.destinationLocationCode,
           destinationLocationCode: data.originLocationCode,
         });
-        setInboundFlights(inboundResponse.data.data);
+        setInboundFlights(inboundResponse.data);
       } else setInboundFlights([]);
     } catch (error) {
       console.log(error);
@@ -60,7 +60,7 @@ export default function ShoppingSearchPage() {
       <SearchHeroComponent />
 
       <main className="app-container">
-        <FlightSearchComponent
+        <FlightSearchFormComponent
           onSubmit={handleSubmitSearch}
           className="relative z-10 -top-28"
         />

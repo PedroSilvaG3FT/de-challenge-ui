@@ -1,6 +1,6 @@
-import FlightListComponent from "../flight-list";
+import FlightListComponent from "./_flight-list.component";
 import { useState, useEffect, useRef } from "react";
-import FlightFilterComponent from "../flight-filter";
+import FlightFilterComponent from "./_flight-filter.component";
 import { IFlightItem } from "../../interface/flight.interface";
 import {
   IFilterOptions,
@@ -39,7 +39,7 @@ export default function FlightSearchResultComponent(props: IProps) {
   return (
     <section ref={containerRef} className="flex gap-4">
       {filterOptions && (
-        <aside className="p-4 h-min w-[300px] sticky top-20 bg-background shadow-md rounded-lg border border-foreground/10">
+        <aside className="p-4 mobile:hidden h-min w-[300px] sticky top-20 bg-background shadow-md rounded-lg border border-foreground/10">
           <FlightFilterComponent
             filterOptions={filterOptions}
             onFilterChange={handleFilterChange}
@@ -47,14 +47,15 @@ export default function FlightSearchResultComponent(props: IProps) {
         </aside>
       )}
 
-      <div className="flex-1">
-        <h3 className="text-2xl font-bold mb-4">{title}</h3>
+      <section className="flex-1">
+        <h3 className="text-2xl font-normal mb-4">{title}</h3>
+
         <FlightListComponent
           itemsPerPage={5}
           flights={filteredFlights}
           onPageChange={() => scrollToContainerTop()}
         />
-      </div>
+      </section>
     </section>
   );
 }

@@ -1,6 +1,6 @@
 import { Plane } from "lucide-react";
 import { useState, useEffect } from "react";
-import FlightCardComponent from "../flight-card";
+import FlightCardComponent from "./_flight-card.component";
 import Each from "@/modules/@shared/components/utils/each";
 import { IFlightItem } from "../../interface/flight.interface";
 import PaginationComponent from "./_flight-list-pagination.component";
@@ -33,7 +33,7 @@ export default function FlightListComponent(props: IProps) {
     onPageChange(currentPage);
   }, [currentPage]);
 
-  if (flights.length === 0) {
+  if (!flights.length) {
     return (
       <section className="h-full flex-1">
         <AppEmptyList
@@ -47,11 +47,13 @@ export default function FlightListComponent(props: IProps) {
   }
 
   return (
-    <section className="space-y-2 flex-1 pb-6">
-      <Each
-        data={paginatedFlights}
-        render={(item) => <FlightCardComponent data={item} />}
-      />
+    <section className="flex-1 pb-6">
+      <article className="space-y-6">
+        <Each
+          data={paginatedFlights}
+          render={(item) => <FlightCardComponent data={item} />}
+        />
+      </article>
 
       <PaginationComponent
         totalPages={totalPages}
