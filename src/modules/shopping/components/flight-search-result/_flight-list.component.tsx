@@ -6,7 +6,6 @@ import { IFlightItem } from "../../interface/flight.interface";
 import PaginationComponent from "./_flight-list-pagination.component";
 import AppEmptyList from "@/modules/@shared/components/app-empty-list";
 import { filterListPagination } from "@/modules/@shared/functions/pagination.function";
-
 interface IProps {
   itemsPerPage: number;
   flights: IFlightItem[];

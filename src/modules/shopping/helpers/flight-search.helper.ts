@@ -1,3 +1,4 @@
+import { EFlightSortType } from "../enums/flight-sort.enum";
 import {
   IFlightFilterOptions,
   IFlightAppliedFilters,
@@ -80,6 +81,32 @@ export class FlightSearchHelper {
 
       return true;
     });
+  }
+
+  static sortFlights(flights: IFlightItem[], sortType: EFlightSortType) {
+    const sortFunctions = {
+      [EFlightSortType.LowestPrice]: (a: IFlightItem, b: IFlightItem) =>
+        parseFloat(a.price.total) - parseFloat(b.price.total),
+      [EFlightSortType.ShortestDuration]: (a: IFlightItem, b: IFlightItem) =>
+        this.parseDuration(a.itineraries[0].duration) -
+        this.parseDuration(b.itineraries[0].duration),
+      [EFlightSortType.EarliestDeparture]: (a: IFlightItem, b: IFlightItem) =>
+        new Date(a.itineraries[0].segments[0].departure.at).getTime() -
+        new Date(b.itineraries[0].segments[0].departure.at).getTime(),
+      [EFlightSortType.EarliestArrival]: (a: IFlightItem, b: IFlightItem) =>
+        new Date(
+          a.itineraries[0].segments[
+            a.itineraries[0].segments.length - 1
+          ].arrival.at
+        ).getTime() -
+        new Date(
+          b.itineraries[0].segments[
+            b.itineraries[0].segments.length - 1
+          ].arrival.at
+        ).getTime(),
+    };
+
+    return [...flights].sort(sortFunctions[sortType]);
   }
 
   private static parseDuration(duration: string): number {

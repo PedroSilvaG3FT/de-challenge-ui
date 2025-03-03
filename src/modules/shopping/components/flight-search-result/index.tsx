@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import FlightListComponent from "./_flight-list.component";
 import FlightFilterComponent from "./_flight-filter.component";
+import FlightSearchSortComponent from "./_flight-sort.component";
 import { IFlightItem } from "../../interface/flight.interface";
 import { FlightSearchHelper } from "../../helpers/flight-search.helper";
 import { scrollToElement } from "@/modules/@shared/functions/scroll.function";
@@ -8,6 +9,7 @@ import {
   IFlightFilterOptions,
   IFlightAppliedFilters,
 } from "../../interface/flight-filter.interface";
+import { EFlightSortType } from "../../enums/flight-sort.enum";
 
 interface IProps {
   title: string;
@@ -15,24 +17,31 @@ interface IProps {
   onPageChange: () => void;
 }
 
-export default function FlightSearchResultComponent(props: IProps) {
-  const { title, flights } = props;
-
+export default function FlightSearchResultComponent({
+  title,
+  flights,
+}: IProps) {
   const containerRef = useRef<HTMLElement>(null);
-  const [filteredFlights, setFilteredFlights] =
+  const [processedFlights, setProcessedFlights] =
     useState<IFlightItem[]>(flights);
-
   const [filterOptions, setFilterOptions] =
     useState<IFlightFilterOptions | null>(null);
 
   useEffect(() => {
-    setFilteredFlights(flights);
+    setProcessedFlights(flights);
     setFilterOptions(FlightSearchHelper.getFilterOptions(flights));
   }, [flights]);
 
   const scrollToContainerTop = () => scrollToElement(containerRef, -100);
+
   const handleFilterChange = (filters: IFlightAppliedFilters) => {
-    setFilteredFlights(FlightSearchHelper.applyFilters(flights, filters));
+    setProcessedFlights(FlightSearchHelper.applyFilters(flights, filters));
+  };
+
+  const handleSortChange = (sortType: EFlightSortType) => {
+    setProcessedFlights(
+      FlightSearchHelper.sortFlights(processedFlights, sortType)
+    );
   };
 
   return (
@@ -45,14 +54,16 @@ export default function FlightSearchResultComponent(props: IProps) {
           />
         </aside>
       )}
-
       <section className="flex-1">
-        <h3 className="text-2xl font-normal mb-4">{title}</h3>
+        <nav className="flex justify-between items-center mb-4">
+          <h3 className="text-2xl font-normal">{title}</h3>
+          <FlightSearchSortComponent onSortChange={handleSortChange} />
+        </nav>
 
         <FlightListComponent
           itemsPerPage={5}
-          flights={filteredFlights}
-          onPageChange={() => scrollToContainerTop()}
+          flights={processedFlights}
+          onPageChange={scrollToContainerTop}
         />
       </section>
     </section>
