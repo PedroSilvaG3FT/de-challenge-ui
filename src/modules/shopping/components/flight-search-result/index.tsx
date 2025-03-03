@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import FlightListComponent from "./_flight-list.component";
 import FlightFilterComponent from "./_flight-filter.component";
 import { IFlightItem } from "../../interface/flight.interface";
-import { FlightSearchFilterHelper } from "../../helpers/flight-search.helper";
+import { FlightSearchHelper } from "../../helpers/flight-search.helper";
 import { scrollToElement } from "@/modules/@shared/functions/scroll.function";
 import {
   IFlightFilterOptions,
@@ -27,12 +27,12 @@ export default function FlightSearchResultComponent(props: IProps) {
 
   useEffect(() => {
     setFilteredFlights(flights);
-    setFilterOptions(FlightSearchFilterHelper.getFilterOptions(flights));
+    setFilterOptions(FlightSearchHelper.getFilterOptions(flights));
   }, [flights]);
 
   const scrollToContainerTop = () => scrollToElement(containerRef, -100);
   const handleFilterChange = (filters: IFlightAppliedFilters) => {
-    setFilteredFlights(FlightSearchFilterHelper.applyFilters(flights, filters));
+    setFilteredFlights(FlightSearchHelper.applyFilters(flights, filters));
   };
 
   return (
