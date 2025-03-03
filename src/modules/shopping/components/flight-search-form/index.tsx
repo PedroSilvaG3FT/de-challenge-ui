@@ -76,8 +76,6 @@ export default function FlightSearchComponent(props: IProps) {
   const watchTripType = form.watch("tripType");
 
   function handleSubmitSearch(values: FormValues) {
-    console.log("VALUES : ", values);
-
     const departureDate =
       values.dateRange instanceof Date
         ? format(values.dateRange, "yyyy-MM-dd")

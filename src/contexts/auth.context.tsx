@@ -52,8 +52,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     try {
       _loadingStore.setShow(true);
 
-      const { data: response } = await AuthService.signUp(data);
-      console.log(response);
+      await AuthService.signUp(data);
       await signIn(data.email, data.password);
 
       _loadingStore.setShow(false);
