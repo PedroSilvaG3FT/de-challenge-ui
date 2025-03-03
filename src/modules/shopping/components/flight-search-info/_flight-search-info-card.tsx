@@ -10,9 +10,9 @@ export default function FlightSearchInfoCardComponent(props: IProps) {
     <article
       className="relative w-full h-64 rounded-2xl overflow-hidden shadow-lg cursor-pointer group"
       style={{
-        backgroundImage: `url(${data.bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundImage: `url(${data.bgImage})`,
       }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-60 transition-opacity duration-300"></div>

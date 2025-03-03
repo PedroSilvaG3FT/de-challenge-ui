@@ -9,19 +9,19 @@ export default function FlightSearchInfoComponent() {
     {
       icon: Plane,
       title: `Find the Best Flights`,
-      bgImage: `/images/search-hero-bg.jpg`,
+      bgImage: `/images/find-flight-bg.jpg`,
       description: `Discover amazing deals to destinations worldwide. Compare prices, schedules, and airlines in seconds.`,
     },
     {
       icon: Globe,
       title: `Explore New Destinations`,
-      bgImage: `/images/search-hero-bg.jpg`,
+      bgImage: `/images/explore-bg.jpg`,
       description: `From paradise beaches to vibrant cities, plan your next adventure with ease and confidence.`,
     },
     {
       icon: Search,
       title: `Save on Your Trip`,
-      bgImage: `/images/search-hero-bg.jpg`,
+      bgImage: `/images/save-trip-bg.jpg`,
       description: `Enjoy exclusive fares and special promotions to travel more while spending less. Let me know if you need any adjustments!`,
     },
   ];
