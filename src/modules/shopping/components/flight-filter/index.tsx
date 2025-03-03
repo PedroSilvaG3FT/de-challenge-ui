@@ -42,7 +42,7 @@ export default function FlightFilterComponent({
 
   useEffect(() => {
     if (debouncedFilters) onFilterChange(debouncedFilters as IAppliedFilters);
-  }, [debouncedFilters, onFilterChange]);
+  }, [debouncedFilters]);
 
   const formatCurrency = (value: number) =>
     `${value.toFixed(2).replace(".", ",")}`;
