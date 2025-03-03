@@ -30,7 +30,7 @@ export default function FlightSearchInfoComponent() {
     <section>
       <FlightSearchInfoMapComponent />
 
-      <section className="grid gap-4 grid-cols-3 relative -top-20">
+      <section className="grid gap-4 grid-cols-3 lg:relative -top-20 mobile:grid-cols-1">
         <Each
           data={data}
           render={(item) => <FlightSearchInfoCardComponent data={item} />}

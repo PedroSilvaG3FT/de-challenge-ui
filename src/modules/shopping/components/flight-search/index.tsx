@@ -93,7 +93,7 @@ export default function FlightSearchComponent(props: IProps) {
           "bg-background shadow-md rounded-xl p-4 w-full relative border border-foreground/10"
         )}
       >
-        <nav className="mb-3 flex gap-4 items-center w-2/4">
+        <nav className="mb-3 flex gap-4 items-center mobile:justify-between">
           <AppFormSelect
             name="travelClass"
             placeholder="Class"
@@ -111,10 +111,10 @@ export default function FlightSearchComponent(props: IProps) {
           />
         </nav>
 
-        <section className="mb-6 grid gap-4 grid-cols-2">
+        <section className="mb-6 grid gap-4 grid-cols-2 mobile:grid-cols-1">
           <DestinationSelectionComponent form={form} />
 
-          <article className="relative grid gap-2 grid-cols-2 rounded-lg bg-background p-2 border border-foreground/10">
+          <article className="relative grid gap-2 grid-cols-2 rounded-lg bg-background p-2 border border-foreground/10 mobile:grid-cols-1">
             <AppFormDatepicker
               name="dateRange"
               control={form.control}
@@ -129,7 +129,7 @@ export default function FlightSearchComponent(props: IProps) {
 
             <Separator
               orientation="vertical"
-              className={CenterAbsoluteItemClassName}
+              className={cn(CenterAbsoluteItemClassName, "mobile:hidden")}
             />
 
             <PassengerSelectionComponent

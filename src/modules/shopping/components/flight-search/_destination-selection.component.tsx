@@ -5,6 +5,7 @@ import { Button } from "@/design/components/ui/button";
 import { Separator } from "@/design/components/ui/separator";
 import AirportSearchComponent from "./_airport-search.component";
 import { CenterAbsoluteItemClassName } from "@/modules/@shared/constants/common-class-name.contant";
+import useScreenSize from "@/hooks/screen-size.hook";
 
 interface IProps {
   form: UseFormReturn<any>;
@@ -12,6 +13,7 @@ interface IProps {
 
 export default function DestinationSelectionComponent(props: IProps) {
   const { form } = props;
+  const { isMobile } = useScreenSize();
 
   const swapOriginAndDestination = () => {
     const origin = form.getValues("origin");
@@ -22,7 +24,7 @@ export default function DestinationSelectionComponent(props: IProps) {
   };
 
   return (
-    <article className="relative grid gap-12 grid-cols-2 rounded-lg bg-background border border-foreground/10 p-2">
+    <article className="relative grid gap-12 grid-cols-2 rounded-lg bg-background border border-foreground/10 p-2 mobile:grid-cols-1">
       <AirportSearchComponent
         name="origin"
         placeholder="Origin"
@@ -30,8 +32,8 @@ export default function DestinationSelectionComponent(props: IProps) {
       />
 
       <Separator
-        orientation="vertical"
         className={CenterAbsoluteItemClassName}
+        orientation={isMobile ? "horizontal" : "vertical"}
       />
 
       <Button
@@ -51,7 +53,6 @@ export default function DestinationSelectionComponent(props: IProps) {
         control={form.control}
         placeholder="Destination"
       />
-      {/* containerClassName="pl-4" */}
     </article>
   );
 }

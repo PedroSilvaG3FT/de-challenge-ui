@@ -12,6 +12,7 @@ import {
 } from "@/design/components/ui/form";
 import Show from "../utils/show";
 import Each from "../utils/each";
+import { cn } from "@/design/lib/utils";
 
 export interface IAppFormAutoCompleteProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -22,6 +23,7 @@ export interface IAppFormAutoCompleteProps
   isLoading?: boolean;
   emptyMessage?: string;
   control: Control<any>;
+  popoverClassName?: string;
   emptyIcon?: React.ReactNode;
   containerClassName?: string;
   onTermChanged?: (term: string) => void;
@@ -34,6 +36,7 @@ export default function AppFormAutoComplete({
   renderItem,
   suggestions,
   onTermChanged,
+  popoverClassName,
   containerClassName,
   emptyMessage = "No results found",
   emptyIcon = <Search className="w-4 h-4" />,
@@ -126,7 +129,12 @@ export default function AppFormAutoComplete({
 
             <Show>
               <Show.When condition={showSuggestions || !!isLoading}>
-                <ul className="mt-1 rounded max-h-48 overflow-y-auto bg-background shadow-lg absolute z-10 w-full border border-foreground/10">
+                <ul
+                  className={cn(
+                    "mt-1 rounded max-h-48 overflow-y-auto bg-background shadow-lg absolute z-10 w-full border border-foreground/10",
+                    popoverClassName
+                  )}
+                >
                   <Show>
                     <Show.When condition={!!isLoading}>
                       <li className="px-4 py-8 flex items-center justify-center">

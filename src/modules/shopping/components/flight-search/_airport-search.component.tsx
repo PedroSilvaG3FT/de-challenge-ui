@@ -38,18 +38,23 @@ export default function AirportSearchComponent(props: IProps) {
         suggestions={airports}
         onTermChanged={handleSearch}
         className="!bg-transparent border-none"
+        popoverClassName="mobile:[width:calc(100dvw-84px)] mobile:left-0"
         renderItem={(item: IAirportItem) => (
-          <article className="flex items-center p-2 group">
-            <IconPlaneDeparture className="w-6 h-6 mr-3 text-primary flex-shrink-0 mt-1 transition-transform duration-500 group-hover:scale-110" />
+          <article className="flex items-start p-2 group">
+            <IconPlaneDeparture className="w-6 h-6 mr-3 text-primary flex-shrink-0 mt-1 transition-transform duration-500 group-hover:scale-110 mobile:mb-2 mobile:mr-0" />
 
-            <section className="flex-grow">
+            <section className="flex-grow w-full">
               <div className="flex justify-between items-baseline">
-                <strong>{item.iataCode}</strong>
-                <span className="text-sm">{item.address.countryCode}</span>
+                <strong className="text-lg mobile:text-base">
+                  {item.iataCode}
+                </strong>
+                <span className="text-sm mobile:text-xs ">
+                  {item.address.countryCode}
+                </span>
               </div>
 
-              <p className="text-sm font-medium">{item.name}</p>
-              <p className="text-xs text-muted-foreground/80">
+              <p className="text-sm font-medium mt-1">{item.name}</p>
+              <p className="text-xs text-muted-foreground/80 mt-1">
                 {item.address.cityName}, {item.address.countryName}
               </p>
             </section>
