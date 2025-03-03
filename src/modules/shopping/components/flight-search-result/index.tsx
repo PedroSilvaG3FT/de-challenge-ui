@@ -10,6 +10,7 @@ import {
   IFlightAppliedFilters,
 } from "../../interface/flight-filter.interface";
 import { EFlightSortType } from "../../enums/flight-sort.enum";
+import FlightFilterSheetComponent from "./_flight-filter-sheet.component";
 
 interface IProps {
   title: string;
@@ -55,8 +56,16 @@ export default function FlightSearchResultComponent({
         </aside>
       )}
       <section className="flex-1">
-        <nav className="flex justify-between items-center mb-4">
-          <h3 className="text-2xl font-normal">{title}</h3>
+        <nav className="flex gap-2 items-center mb-4">
+          <h3 className="text-2xl font-normal mr-auto mobile:text-xl">
+            {title}
+          </h3>
+          {filterOptions && (
+            <FlightFilterSheetComponent
+              filterOptions={filterOptions}
+              onFilterChange={handleFilterChange}
+            />
+          )}
           <FlightSearchSortComponent onSortChange={handleSortChange} />
         </nav>
 

@@ -34,8 +34,8 @@ export default function FlightSearchSortComponent({ onSortChange }: IProps) {
           variant="outline"
           className="justify-start text-left font-normal"
         >
-          <SortAsc className="mr-2 h-4 w-4" />
-          <span>
+          <SortAsc className="h-4 w-4" />
+          <span className="ml-2 mobile:hidden">
             Sort:{" "}
             {
               FlightSortOptions.find((option) => option.value === selectedSort)

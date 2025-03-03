@@ -110,13 +110,13 @@ export default function FlightSearchComponent(props: IProps) {
           "bg-background shadow-md rounded-xl p-4 w-full relative border border-foreground/10"
         )}
       >
-        <nav className="mb-3 flex gap-4 items-center w-full mobile:justify-between">
+        <nav className="mb-3 flex gap-4 items-center w-full mobile:justify-between mobile:overflow-x-auto">
           <AppFormSelect
             name="travelClass"
             placeholder="Class"
             control={form.control}
             options={TravelClassFormOptions}
-            className="!bg-transparent border-none text-lg"
+            className="!bg-transparent border-none text-lg mobile:text-base"
           />
 
           <AppFormSelect
@@ -124,13 +124,13 @@ export default function FlightSearchComponent(props: IProps) {
             placeholder="Trip Type"
             control={form.control}
             options={TripFormOptions}
-            className="!bg-transparent border-none text-lg"
+            className="!bg-transparent border-none text-lg mobile:text-base"
           />
 
           <SearchFlightFilterComponent
             name="filters"
             control={form.control}
-            className="!bg-transparent border-none text-lg"
+            className="!bg-transparent border-none text-lg mobile:text-base"
           />
         </nav>
 
