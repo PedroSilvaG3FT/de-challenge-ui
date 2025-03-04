@@ -23,8 +23,7 @@ export function FlightSearchInfoMapComponent() {
         </p>
         <p className="text-sm md:text-lg text-foreground/50 max-w-2xl mx-auto py-4">
           Find the best flight deals and embark on your next adventure. Your
-          journey begins here! Se quiser algo mais dinâmico ou inspirador, me
-          avise!
+          journey begins here!
         </p>
       </article>
 
