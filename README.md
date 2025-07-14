@@ -1,7 +1,4 @@
 # Frontend Application Overview
-
-![Logo](https://de-challenge-ui.vercel.app/logo.svg)
-
 ## Description
 
 This is a frontend application designed to provide users with a seamless experience for managing flight search histories. The application allows users to log in, view their search history, and manage their profiles. Built with modern web technologies, the application aims to be user-friendly and responsive.
